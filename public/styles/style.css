@@ -32,24 +32,15 @@ button{
     border:none;
 
     cursor: pointer;
-
-    position:absolute;
-    top:0;
-    right:0;
 }
 
-.guessing-board{
-    display: flex;
-    flex-direction: column;
-    
-    position:relative;
-}
 
 .guess{
     display:flex;
-    position:absolute;
-    bottom:0;
-    right:0;
+
+    margin-block:50px;
+
+    align-items: center;
 }
 
 .guess > *{
@@ -60,8 +51,6 @@ button{
 .keyboard{
     display:flex;
     flex-wrap: wrap;
-
-    margin-top:50px;
 }
 
 .letter{
@@ -86,4 +75,18 @@ button{
     filter:brightness(50%);
 
     pointer-events: none;
+}
+
+.redFont{
+    color: red;
+}
+
+.greenFont{
+    color: green;
+}
+
+@media (max-width: 600px){
+    .root{
+        width: 100vw;
+    }
 }

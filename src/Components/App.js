@@ -1,17 +1,21 @@
 import react from "react";
 import alphabetObjList from "../utils/Alphabet";
+import wordsDatastore from "../utils/words";
 
 export default App;
 
 function App() {
+  console.log("passou aqui");
   const [numberOfWrongGuesses, setnumberOfWrongGuesses] = react.useState(0);
   const [rightGuessesIndexs, setRightGuessesIndexs] = react.useState([]);
   const [wordAnswer, setWordAnswer] = react.useState([]);
-  const [lettersList, setLettersList] = react.useState(alphabetObjList());
+  const [lettersObjectList, setlettersObjectList] = react.useState(
+    alphabetObjList()
+  );
 
-  let currentWord;
+  const [answerDisplayScreen, setAnswerDisplayScreen] = react.useState("");
 
-  const wrongGuesses = [
+  const wrongGuessesImages = [
     "/assets/forca0.png",
     "/assets/forca1.png",
     "/assets/forca2.png",
@@ -22,12 +26,16 @@ function App() {
   ];
 
   function getRandomAPIWord() {
-    currentWord = "StringTêsté";
+    const wordsList = wordsDatastore;
+
+    const randomWord = wordsList[Math.floor(Math.random() * wordsList.length)];
+    setAnswerDisplayScreen(randomWord);
+    return randomWord;
   }
 
   function startGame() {
-    getRandomAPIWord();
-    const APIWord = currentWord;
+    resetParametersToDefault();
+    const APIWord = getRandomAPIWord();
 
     const normalizedAPIWord = normalizeAPIWord(APIWord);
 
@@ -79,17 +87,17 @@ function App() {
   }
 
   function enableKeyboard() {
-    lettersList.forEach((letter) => (letter.clickable = true));
+    lettersObjectList.forEach((letter) => (letter.clickable = true));
   }
 
   function disableKeyboard() {
-    lettersList.forEach((letter) => (letter.clickable = false));
+    lettersObjectList.forEach((letter) => (letter.clickable = false));
   }
 
   function Keyboard() {
     return (
       <ul className="keyboard">
-        {lettersList.map((item) => (
+        {lettersObjectList.map((item) => (
           <Letter
             key={item.key}
             index={item.key}
@@ -102,14 +110,14 @@ function App() {
   }
 
   function Letter(props) {
-    const [isCLickable, setClickable] = react.useState(props.clickable);
+    const [isClickable, setClickable] = react.useState(props.clickable);
 
-    function checkLetter() {
-      const newLettersList = [...lettersList];
-      newLettersList[props.index].clickable = false;
-      setLettersList(newLettersList);
+    function guessingTurn() {
+      const newlettersObjectList = [...lettersObjectList];
+      newlettersObjectList[props.index].clickable = false;
+      setlettersObjectList(newlettersObjectList);
+      setClickable(false);
 
-      console.log(lettersList);
       const rightGuess = wordAnswer.includes(props.letter.toLowerCase());
 
       if (rightGuess) {
@@ -119,15 +127,27 @@ function App() {
             newRightIndexs.push(index);
           }
         });
-        setRightGuessesIndexs(rightGuessesIndexs.concat(newRightIndexs));
-      }
 
-      console.log(rightGuessesIndexs);
-      setClickable(false);
+        const newRightGuessesIndexs = rightGuessesIndexs.concat(newRightIndexs);
+        setRightGuessesIndexs(newRightGuessesIndexs);
+
+        const gameWon = newRightGuessesIndexs.length === wordAnswer.length;
+        if (gameWon) {
+          disableKeyboard();
+        }
+      } else {
+        const newNumberWrongGuesses = numberOfWrongGuesses + 1;
+        setnumberOfWrongGuesses(newNumberWrongGuesses);
+
+        const gameLost = newNumberWrongGuesses === 6;
+        if (gameLost) {
+          disableKeyboard();
+        }
+      }
     }
 
-    return isCLickable ? (
-      <li className="letter" onClick={checkLetter}>
+    return isClickable ? (
+      <li className="letter" onClick={guessingTurn}>
         {props.letter}
       </li>
     ) : (
@@ -135,23 +155,37 @@ function App() {
     );
   }
 
+  function ShowGuess() {
+    if (numberOfWrongGuesses === 6) {
+      return <li className="redFont">{answerDisplayScreen}</li>;
+    } else if (rightGuessesIndexs.length === wordAnswer.length) {
+      return <li className="greenFont">{answerDisplayScreen}</li>;
+    } else {
+      return wordAnswer.map((item, i) =>
+        rightGuessesIndexs.includes(i) ? (
+          <li>{answerDisplayScreen[i]}</li>
+        ) : (
+          <li>{"_"}</li>
+        )
+      );
+    }
+  }
+
+  function resetParametersToDefault() {
+    setnumberOfWrongGuesses(0);
+    setRightGuessesIndexs([]);
+    setWordAnswer([]);
+  }
+
   return (
     <>
       <div className="main-content">
-        <img src={wrongGuesses[numberOfWrongGuesses]} />
-        <div className="guessing-board">
+          <img src={wrongGuessesImages[numberOfWrongGuesses]} />
           <button onClick={startGame}>Escolher Palavra</button>
-          <ul className="guess">
-            {wordAnswer.map((item, i) =>
-              rightGuessesIndexs.includes(i) ? (
-                <li>{wordAnswer[i]}</li>
-              ) : (
-                <li>{"_"}</li>
-              )
-            )}
-          </ul>
-        </div>
       </div>
+      <ul className="guess">
+        <ShowGuess />
+      </ul>
       <Keyboard />
     </>
   );
