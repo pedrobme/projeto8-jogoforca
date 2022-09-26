@@ -1,19 +1,49 @@
 import react from "react";
 import alphabetObjList from "../utils/Alphabet";
 import wordsDatastore from "../utils/words";
+import GameAndInput from "./GameAndInput";
+import InitialScreen from "./InitialScreen";
+import Keyboard from "./Keyboard";
 
 export default App;
 
 function App() {
-  console.log("passou aqui");
+  const [showInitialScreen, setShowInitialScreen] = react.useState(true);
+
   const [numberOfWrongGuesses, setnumberOfWrongGuesses] = react.useState(0);
   const [rightGuessesIndexs, setRightGuessesIndexs] = react.useState([]);
-  const [wordAnswer, setWordAnswer] = react.useState([]);
+
+  const [originalAnswer, setoriginalAnswer] = react.useState("");
+  const [splittedNormalizedAnswer, setsplittedNormalizedAnswer] =
+    react.useState([]);
+
   const [lettersObjectList, setlettersObjectList] = react.useState(
     alphabetObjList()
   );
 
-  const [answerDisplayScreen, setAnswerDisplayScreen] = react.useState("");
+  const [gameWon, setGameWon] = react.useState(false);
+  const [gameLost, setGameLost] = react.useState(false);
+
+  const [guessAttemptInputValue, setGuessAttemptInputValue] =
+    react.useState("");
+
+  const [hintEnabled, setHintEnabled] = react.useState(false);
+  const [hintAvaibled, setHintAvaibled] = react.useState(true);
+  const [counter, setCounter] = react.useState("");
+
+  react.useEffect(() => {
+    let myInterval = null;
+
+    if (!hintEnabled) {
+      myInterval = setInterval(() => {
+        setCounter((prevCounter) => prevCounter - 1);
+      }, 1000);
+    } else {
+      clearInterval(myInterval);
+    }
+
+    return () => clearInterval(myInterval);
+  }, [!hintEnabled]);
 
   const wrongGuessesImages = [
     "/assets/forca0.png",
@@ -25,29 +55,33 @@ function App() {
     "/assets/forca6.png",
   ];
 
-  function getRandomAPIWord() {
-    const wordsList = wordsDatastore;
-
-    const randomWord = wordsList[Math.floor(Math.random() * wordsList.length)];
-    setAnswerDisplayScreen(randomWord);
-    return randomWord;
+  function firstStartGame() {
+    setShowInitialScreen(false);
+    startGame();
   }
 
   function startGame() {
     resetParametersToDefault();
     const APIWord = getRandomAPIWord();
 
-    const normalizedAPIWord = normalizeAPIWord(APIWord);
+    const normalizedAPIWord = normalizeWord(APIWord);
 
     const splittedArrayAPIWord = normalizedAPIWord.split("");
 
-    setWordAnswer(splittedArrayAPIWord);
-    console.log(splittedArrayAPIWord);
+    setsplittedNormalizedAnswer(splittedArrayAPIWord);
 
     enableKeyboard();
   }
 
-  function normalizeAPIWord(str) {
+  function getRandomAPIWord() {
+    const wordsList = wordsDatastore;
+
+    const randomWord = wordsList[Math.floor(Math.random() * wordsList.length)];
+    setoriginalAnswer(randomWord);
+    return randomWord;
+  }
+
+  function normalizeWord(str) {
     str = str.toLowerCase();
     let newStr = "";
 
@@ -68,7 +102,8 @@ function App() {
 
       const isUEspecial = currentLetter === "ú";
 
-      console.log(isEEspecial);
+      const isCEspecial = currentLetter === "ç";
+
       if (isAEspecial) {
         newStr += "a";
       } else if (isEEspecial) {
@@ -79,6 +114,8 @@ function App() {
         newStr += "o";
       } else if (isUEspecial) {
         newStr += "u";
+      } else if (isCEspecial) {
+        newStr += "c";
       } else {
         newStr += currentLetter;
       }
@@ -94,76 +131,96 @@ function App() {
     lettersObjectList.forEach((letter) => (letter.clickable = false));
   }
 
-  function Keyboard() {
-    return (
-      <ul className="keyboard">
-        {lettersObjectList.map((item) => (
-          <Letter
-            key={item.key}
-            index={item.key}
-            letter={item.letter}
-            clickable={item.clickable}
-          />
-        ))}
-      </ul>
-    );
-  }
+  function guessingTurn(choosenLetter) {
+    console.log(choosenLetter);
+    const newlettersObjectList = [...lettersObjectList];
+    newlettersObjectList[choosenLetter.index].clickable = false;
+    setlettersObjectList(newlettersObjectList);
 
-  function Letter(props) {
-    const [isClickable, setClickable] = react.useState(props.clickable);
+    const letterGuessAttempt = choosenLetter.letter.toLowerCase();
+    const rightGuess = splittedNormalizedAnswer.includes(letterGuessAttempt);
 
-    function guessingTurn() {
-      const newlettersObjectList = [...lettersObjectList];
-      newlettersObjectList[props.index].clickable = false;
-      setlettersObjectList(newlettersObjectList);
-      setClickable(false);
-
-      const rightGuess = wordAnswer.includes(props.letter.toLowerCase());
-
-      if (rightGuess) {
-        const newRightIndexs = [];
-        wordAnswer.forEach((item, index) => {
-          if (item === props.letter.toLowerCase()) {
-            newRightIndexs.push(index);
-          }
-        });
-
-        const newRightGuessesIndexs = rightGuessesIndexs.concat(newRightIndexs);
-        setRightGuessesIndexs(newRightGuessesIndexs);
-
-        const gameWon = newRightGuessesIndexs.length === wordAnswer.length;
-        if (gameWon) {
-          disableKeyboard();
+    if (rightGuess) {
+      const newRightIndexs = [];
+      splittedNormalizedAnswer.forEach((AnsLetter, index) => {
+        if (AnsLetter === letterGuessAttempt) {
+          newRightIndexs.push(index);
         }
-      } else {
-        const newNumberWrongGuesses = numberOfWrongGuesses + 1;
-        setnumberOfWrongGuesses(newNumberWrongGuesses);
+      });
 
-        const gameLost = newNumberWrongGuesses === 6;
-        if (gameLost) {
-          disableKeyboard();
-        }
+      const newRightGuessesIndexs = rightGuessesIndexs.concat(newRightIndexs);
+      setRightGuessesIndexs(newRightGuessesIndexs);
+
+      const isGameWon =
+        newRightGuessesIndexs.length === splittedNormalizedAnswer.length;
+      if (isGameWon) {
+        setGameWon(true);
+      }
+    } else {
+      const newNumberWrongGuesses = numberOfWrongGuesses + 1;
+      setnumberOfWrongGuesses(newNumberWrongGuesses);
+
+      const isGameLost = newNumberWrongGuesses === 6;
+      if (isGameLost) {
+        setGameLost(true);
       }
     }
+  }
 
-    return isClickable ? (
-      <li className="letter" onClick={guessingTurn}>
-        {props.letter}
-      </li>
-    ) : (
-      <li className="letter disabled-letter">{props.letter}</li>
-    );
+  function gameWonScreen() {
+    disableKeyboard();
+    return <li className="greenFont">{originalAnswer}</li>;
+  }
+
+  function gameLostScreen() {
+    disableKeyboard();
+    setnumberOfWrongGuesses(6);
+    return <li className="redFont">{originalAnswer}</li>;
+  }
+
+  function submitGuessAttempt() {
+    const normalizedGuessAttempt = normalizeWord(guessAttemptInputValue);
+    const normalizedAnswer = normalizeWord(originalAnswer);
+
+    console.log(normalizedAnswer);
+    console.log(normalizedGuessAttempt);
+    let allLettersEqual = true;
+
+    if (normalizedGuessAttempt.length === normalizedAnswer.length) {
+      for (let i = 0; i < normalizedAnswer.length; i++) {
+        if (!(normalizedAnswer[i] === normalizedGuessAttempt[i])) {
+          allLettersEqual = false;
+          console.log("entrou");
+          break;
+        }
+      }
+    } else allLettersEqual = false;
+
+    allLettersEqual ? setGameWon(true) : setGameLost(true);
+    setGuessAttemptInputValue("");
+  }
+
+  function resetParametersToDefault() {
+    setnumberOfWrongGuesses(0);
+    setRightGuessesIndexs([]);
+    setsplittedNormalizedAnswer([]);
+    setGameLost(false);
+    setGameWon(false);
+    setGuessAttemptInputValue("");
+    setHintEnabled(false);
+    setHintAvaibled(true)
+    setCounter(30);
   }
 
   function ShowGuess() {
-    if (numberOfWrongGuesses === 6) {
-      return <li className="redFont">{answerDisplayScreen}</li>;
-    } else if (rightGuessesIndexs.length === wordAnswer.length) {
-      return <li className="greenFont">{answerDisplayScreen}</li>;
+    if (gameLost) {
+      return gameLostScreen();
+    } else if (gameWon) {
+      return gameWonScreen();
     } else {
-      return wordAnswer.map((item, i) =>
+      return splittedNormalizedAnswer.map((item, i) =>
         rightGuessesIndexs.includes(i) ? (
-          <li>{answerDisplayScreen[i]}</li>
+          <li>{originalAnswer[i]}</li>
         ) : (
           <li>{"_"}</li>
         )
@@ -171,22 +228,76 @@ function App() {
     }
   }
 
-  function resetParametersToDefault() {
-    setnumberOfWrongGuesses(0);
-    setRightGuessesIndexs([]);
-    setWordAnswer([]);
+  function HintHandler() {
+    if (counter === 0) {
+      setHintEnabled(true);
+    }
+
+    if((gameLost===true) || (gameWon===true)){
+      return <></>
+    }
+
+    if(hintAvaibled===false){
+      return <div onClick={getHint} className="hint disabled-div">
+      <ion-icon class="hint-ionicon" name="bulb-outline"></ion-icon>
+      <br></br>
+      <p>HINT</p>
+    </div>
+    }
+
+    return hintEnabled ? (
+      <div onClick={getHint} className="hint">
+        <ion-icon class="hint-ionicon" name="bulb-outline"></ion-icon>
+        <br></br>
+        <p>HINT</p>
+      </div>
+    ) : (
+      <p>Hint will be avaible in {counter} seconds.</p>
+    );
   }
 
-  return (
-    <>
-      <div className="main-content">
-          <img src={wrongGuessesImages[numberOfWrongGuesses]} />
-          <button onClick={startGame}>Escolher Palavra</button>
+  function getHint() {
+    const remainingLetters = splittedNormalizedAnswer.filter(
+      (item, index) => !rightGuessesIndexs.includes(index)
+    );
+    console.log(remainingLetters)
+
+    const randomRemainingLetter = remainingLetters[Math.floor(Math.random() * remainingLetters.length)];
+
+    console.log(randomRemainingLetter)
+
+    const hintLetterObject = lettersObjectList.filter((letterObject)=> letterObject.letter.toLocaleLowerCase() === randomRemainingLetter)
+
+    guessingTurn(hintLetterObject[0])
+    setHintAvaibled(false)
+  }
+
+  return showInitialScreen ? (
+    <InitialScreen firstStartGame={firstStartGame} />
+  ) : (
+    <div className="app">
+      <GameAndInput
+        gameWon={gameWon}
+        gameLost={gameLost}
+        guessAttemptInputValue={guessAttemptInputValue}
+        setGuessAttemptInputValue={setGuessAttemptInputValue}
+        submitGuessAttempt={submitGuessAttempt}
+        wrongGuessesImages={wrongGuessesImages}
+        numberOfWrongGuesses={numberOfWrongGuesses}
+        startGame={startGame}
+      />
+      <div className="guess-hint">
+        <ul className="guess">
+          <ShowGuess />
+        </ul>
+        <HintHandler />
       </div>
-      <ul className="guess">
-        <ShowGuess />
-      </ul>
-      <Keyboard />
-    </>
+      <Keyboard
+        guessingTurn={guessingTurn}
+        lettersObjectList={lettersObjectList}
+      />
+    </div>
   );
 }
+
+// Styled Components

@@ -2,18 +2,54 @@
     box-sizing: border-box;
 }
 
-.root{
-    width: 60vw;
+.app{
+    width: 80vw;
     margin: auto;
+}
+
+.game-title{
+    padding-top: 100px;
+    font-size: 100px;
+    font-family: 'Nabla', cursive;
+
+    text-align: center;
+}
+
+.newgame{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+    margin: auto;
+
+    margin-top:200px;
+}
+
+.newgame > *{
+    font-size: 30px;
+    margin-inline:5px;
+}
+
+.newgame:hover{
+
+    color:gray;
 }
 
 .main-content{
     display:flex;
-    justify-content: space-between;
+    justify-content: space-around;
 }
 
 img{
     width: 350px;
+}
+
+.sidebar{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
 }
 
 button{
@@ -23,7 +59,7 @@ button{
     height: 50px;
 
     color: white;
-    background-color: rgb(18, 219, 0);
+    background-color: black;
     font-weight: bold;
 
     font-size: 16px;
@@ -34,13 +70,75 @@ button{
     cursor: pointer;
 }
 
+button:hover{
+    background-color: rgba(0, 0, 0, 0.418);
+}
+
+.guess-attempt-div{
+    display:flex;
+
+    align-items: center;
+
+}
+
+input{
+    border-radius: 6px;
+    width: 250px;
+    height: 40px;
+
+    margin-right: 10px;
+}
+
+.send-ionicon{
+    font-size: 25px;
+
+    cursor: pointer;
+
+    color: rgb(0, 255, 0);
+}
+
+.send-ionicon:hover{
+    color: silver;
+}
+
+.guess-hint{
+    display:flex;
+
+    justify-content: space-around;
+    align-items: center;
+}
+
+.hint{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+
+    vertical-align: center;
+
+    font-weight: bold;
+    font-size: 15px;
+
+    border: 2px solid black;
+
+    padding:3px;
+    
+    cursor:pointer;
+}
+
+.hint:hover{
+    background-color: gray;
+}
+
+.hint-ionicon{
+    font-size: 25px;
+    pointer-events: none;
+}
 
 .guess{
     display:flex;
 
-    margin-block:50px;
+    margin-block:30px;
 
-    align-items: center;
 }
 
 .guess > *{
@@ -51,6 +149,10 @@ button{
 .keyboard{
     display:flex;
     flex-wrap: wrap;
+    margin-bottom: 15px;
+
+    width: 550px;
+    margin:auto
 }
 
 .letter{
@@ -69,12 +171,22 @@ button{
     margin: 5px;
     
     cursor: pointer;
+
+    border-radius: 10px;
 }
 
-.disabled-letter{
-    filter:brightness(50%);
+.letter:hover{
+    filter: brightness(120%);
+}
+
+.disabled-div{
+    filter:brightness(20%);
 
     pointer-events: none;
+}
+
+.disabled-div:hover{
+    filter: none
 }
 
 .redFont{
@@ -83,6 +195,10 @@ button{
 
 .greenFont{
     color: green;
+}
+
+.endGameMsg{
+    font-weight: bold;
 }
 
 @media (max-width: 600px){

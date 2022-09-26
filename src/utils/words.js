@@ -145,7 +145,7 @@ const wordsDatastore = [
   "povoar",
   "pólvora",
   "palhaço",
-  "paróqia",
+  "paróquia",
   "pano",
   "princesa",
   "pizza",
