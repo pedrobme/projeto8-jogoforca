@@ -2,93 +2,6 @@
     box-sizing: border-box;
 }
 
-.app{
-    width: 80vw;
-    margin: auto;
-}
-
-.game-title{
-    padding-top: 100px;
-    font-size: 100px;
-    font-family: 'Nabla', cursive;
-
-    text-align: center;
-}
-
-.newgame{
-    display:flex;
-    align-items: center;
-    justify-content: center;
-
-    cursor: pointer;
-    margin: auto;
-
-    margin-top:200px;
-}
-
-.newgame > *{
-    font-size: 30px;
-    margin-inline:5px;
-}
-
-.newgame:hover{
-
-    color:gray;
-}
-
-.main-content{
-    display:flex;
-    justify-content: space-around;
-}
-
-img{
-    width: 350px;
-}
-
-.sidebar{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-}
-
-button{
-    margin-top: 50px;
-
-    width: 200px;
-    height: 50px;
-
-    color: white;
-    background-color: black;
-    font-weight: bold;
-
-    font-size: 16px;
-
-    border-radius: 5px;
-    border:none;
-
-    cursor: pointer;
-}
-
-button:hover{
-    background-color: rgba(0, 0, 0, 0.418);
-}
-
-.guess-attempt-div{
-    display:flex;
-
-    align-items: center;
-
-}
-
-input{
-    border-radius: 6px;
-    width: 250px;
-    height: 40px;
-
-    margin-right: 10px;
-}
-
 .send-ionicon{
     font-size: 25px;
 
@@ -99,13 +12,6 @@ input{
 
 .send-ionicon:hover{
     color: silver;
-}
-
-.guess-hint{
-    display:flex;
-
-    justify-content: space-around;
-    align-items: center;
 }
 
 .hint{
@@ -134,51 +40,6 @@ input{
     pointer-events: none;
 }
 
-.guess{
-    display:flex;
-
-    margin-block:30px;
-
-}
-
-.guess > *{
-    font-size: 30px;
-    margin-inline:5px;
-}
-
-.keyboard{
-    display:flex;
-    flex-wrap: wrap;
-    margin-bottom: 15px;
-
-    width: 550px;
-    margin:auto
-}
-
-.letter{
-    width: 32px;
-    height: 32px;
-    
-    background-color: rgb(133, 178, 216);
-
-    font-weight: bold;
-    color: rgb(11, 113, 197);
-
-    display:flex;
-    justify-content: center;
-    align-items: center;
-
-    margin: 5px;
-    
-    cursor: pointer;
-
-    border-radius: 10px;
-}
-
-.letter:hover{
-    filter: brightness(120%);
-}
-
 .disabled-div{
     filter:brightness(20%);
 
@@ -187,22 +48,4 @@ input{
 
 .disabled-div:hover{
     filter: none
-}
-
-.redFont{
-    color: red;
-}
-
-.greenFont{
-    color: green;
-}
-
-.endGameMsg{
-    font-weight: bold;
-}
-
-@media (max-width: 600px){
-    .root{
-        width: 100vw;
-    }
 }
