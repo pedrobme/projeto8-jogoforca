@@ -1,24 +1,25 @@
 import GuessAttemptDiv from "./Guess";
+import styled from "styled-components";
 
-export default GameAndInput
+export default GameAndInput;
 
 function GameAndInput(props) {
-    const {
-        gameWon,
-        gameLost,
-        guessAttemptInputValue,
-        setGuessAttemptInputValue,
-        submitGuessAttempt,
-        wrongGuessesImages,
-        numberOfWrongGuesses,
-        startGame
-      } = props;
-      
+  const {
+    gameWon,
+    gameLost,
+    guessAttemptInputValue,
+    setGuessAttemptInputValue,
+    submitGuessAttempt,
+    wrongGuessesImages,
+    numberOfWrongGuesses,
+    startGame,
+  } = props;
+
   return (
-    <div className="main-content">
-      <img src={wrongGuessesImages[numberOfWrongGuesses]} />
-      <div className="sidebar">
-        <button onClick={startGame}>Nova Palavra</button>
+    <MainContentDiv>
+      <ImgStyled src={wrongGuessesImages[numberOfWrongGuesses]} />
+      <SidebarDiv>
+        <ButtonStyled onClick={startGame}>Nova Palavra</ButtonStyled>
         <GuessAttemptDiv
           gameWon={gameWon}
           gameLost={gameLost}
@@ -26,7 +27,46 @@ function GameAndInput(props) {
           setGuessAttemptInputValue={setGuessAttemptInputValue}
           submitGuessAttempt={submitGuessAttempt}
         />
-      </div>
-    </div>
+      </SidebarDiv>
+    </MainContentDiv>
   );
 }
+
+// Styled Components
+const MainContentDiv = styled.div`
+  display: flex;
+  justify-content: space-around;
+`;
+
+const ImgStyled = styled.img`
+  width: 350px;
+`;
+
+const SidebarDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+`;
+
+const ButtonStyled = styled.button`
+  margin-top: 50px;
+
+  width: 200px;
+  height: 50px;
+
+  color: white;
+  background-color: black;
+  font-weight: bold;
+
+  font-size: 16px;
+
+  border-radius: 5px;
+  border: none;
+
+  cursor: pointer;
+
+  &:hover{
+    background-color: rgba(0, 0, 0, 0.418);
+  }
+`;

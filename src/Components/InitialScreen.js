@@ -1,21 +1,52 @@
+import styled from "styled-components";
+
 export default InitialScreen;
+
 
 function InitialScreen(props) {
   return (
     <>
-      <h1 className="game-title">HANGMAN GAME</h1>
-      <div onClick={() => props.firstStartGame()} className="newgame">
+      <GameTittle>HANGMAN GAME</GameTittle>
+      <NewGameDiv onClick={() => props.firstStartGame()}>
         {[
-          <u>N</u>,
-          <u>E</u>,
-          <u>W</u>,
-          <u></u>,
-          <u>G</u>,
-          <u>A</u>,
-          <u>M</u>,
-          <u>E</u>,
+          <u key="n">N</u>,
+          <u key="e1">E</u>,
+          <u key="w">W</u>,
+          <u key="space"></u>,
+          <u key="g">G</u>,
+          <u key="a">A</u>,
+          <u key="m">M</u>,
+          <u key="e2">E</u>,
         ].map((item) => item)}
-      </div>
+      </NewGameDiv>
     </>
   );
 }
+
+const GameTittle = styled.h1`
+  padding-top: 100px;
+  font-size: 100px;
+  font-family: "Nabla", cursive;
+
+  text-align: center;
+`;
+
+const NewGameDiv = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  margin: auto;
+
+  margin-top: 200px;
+
+  > *{
+    font-size: 30px;
+    margin-inline:5px;
+  }
+
+  &:hover{
+    color:gray;
+  }
+`;

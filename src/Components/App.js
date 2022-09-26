@@ -4,6 +4,7 @@ import wordsDatastore from "../utils/words";
 import GameAndInput from "./GameAndInput";
 import InitialScreen from "./InitialScreen";
 import Keyboard from "./Keyboard";
+import styled from "styled-components";
 
 export default App;
 
@@ -169,13 +170,13 @@ function App() {
 
   function gameWonScreen() {
     disableKeyboard();
-    return <li className="greenFont">{originalAnswer}</li>;
+    return <GameWonAnswer>{originalAnswer}</GameWonAnswer>;
   }
 
   function gameLostScreen() {
     disableKeyboard();
     setnumberOfWrongGuesses(6);
-    return <li className="redFont">{originalAnswer}</li>;
+    return <GameLostAnswer>{originalAnswer}</GameLostAnswer>;
   }
 
   function submitGuessAttempt() {
@@ -208,7 +209,7 @@ function App() {
     setGameWon(false);
     setGuessAttemptInputValue("");
     setHintEnabled(false);
-    setHintAvaibled(true)
+    setHintAvaibled(true);
     setCounter(30);
   }
 
@@ -220,9 +221,9 @@ function App() {
     } else {
       return splittedNormalizedAnswer.map((item, i) =>
         rightGuessesIndexs.includes(i) ? (
-          <li>{originalAnswer[i]}</li>
+          <li key={i}>{originalAnswer[i]}</li>
         ) : (
-          <li>{"_"}</li>
+          <li key={i}>{"_"}</li>
         )
       );
     }
@@ -233,26 +234,28 @@ function App() {
       setHintEnabled(true);
     }
 
-    if((gameLost===true) || (gameWon===true)){
-      return <></>
+    if (gameLost === true || gameWon === true) {
+      return <></>;
     }
 
-    if(hintAvaibled===false){
-      return <div onClick={getHint} className="hint disabled-div">
-      <ion-icon class="hint-ionicon" name="bulb-outline"></ion-icon>
-      <br></br>
-      <p>HINT</p>
-    </div>
+    if (hintAvaibled === false) {
+      return (
+        <div onClick={getHint} className="hint disabled-div">
+          <ion-icon class="hint-ionicon" name="bulb-outline"></ion-icon>
+          <br></br>
+          <p>DICA</p>
+        </div>
+      );
     }
 
     return hintEnabled ? (
       <div onClick={getHint} className="hint">
         <ion-icon class="hint-ionicon" name="bulb-outline"></ion-icon>
         <br></br>
-        <p>HINT</p>
+        <p>DICA</p>
       </div>
     ) : (
-      <p>Hint will be avaible in {counter} seconds.</p>
+      <p>Dica estará disponível em {counter} segundos.</p>
     );
   }
 
@@ -260,22 +263,26 @@ function App() {
     const remainingLetters = splittedNormalizedAnswer.filter(
       (item, index) => !rightGuessesIndexs.includes(index)
     );
-    console.log(remainingLetters)
+    console.log(remainingLetters);
 
-    const randomRemainingLetter = remainingLetters[Math.floor(Math.random() * remainingLetters.length)];
+    const randomRemainingLetter =
+      remainingLetters[Math.floor(Math.random() * remainingLetters.length)];
 
-    console.log(randomRemainingLetter)
+    console.log(randomRemainingLetter);
 
-    const hintLetterObject = lettersObjectList.filter((letterObject)=> letterObject.letter.toLocaleLowerCase() === randomRemainingLetter)
+    const hintLetterObject = lettersObjectList.filter(
+      (letterObject) =>
+        letterObject.letter.toLocaleLowerCase() === randomRemainingLetter
+    );
 
-    guessingTurn(hintLetterObject[0])
-    setHintAvaibled(false)
+    guessingTurn(hintLetterObject[0]);
+    setHintAvaibled(false);
   }
 
   return showInitialScreen ? (
     <InitialScreen firstStartGame={firstStartGame} />
   ) : (
-    <div className="app">
+    <AppDiv>
       <GameAndInput
         gameWon={gameWon}
         gameLost={gameLost}
@@ -286,18 +293,49 @@ function App() {
         numberOfWrongGuesses={numberOfWrongGuesses}
         startGame={startGame}
       />
-      <div className="guess-hint">
-        <ul className="guess">
+      <GuessAndHintDiv>
+        <GuessUl>
           <ShowGuess />
-        </ul>
+        </GuessUl>
         <HintHandler />
-      </div>
+      </GuessAndHintDiv>
       <Keyboard
         guessingTurn={guessingTurn}
         lettersObjectList={lettersObjectList}
       />
-    </div>
+    </AppDiv>
   );
 }
 
 // Styled Components
+const AppDiv = styled.div`
+  width: 80vw;
+  margin: auto;
+`;
+
+const GuessAndHintDiv = styled.div`
+  display: flex;
+
+  justify-content: space-around;
+  align-items: center;
+`;
+
+const GuessUl = styled.ul`
+  display: flex;
+  margin-block: 30px;
+
+  > * {
+    font-size: 30px;
+    margin-inline: 5px;
+  }
+`;
+
+const GameLostAnswer = styled.li`
+  font-weight: bold;
+  color: red;
+`;
+
+const GameWonAnswer = styled.li`
+  font-weight: bold;
+  color: green;
+`;

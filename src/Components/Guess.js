@@ -1,3 +1,4 @@
+import styled from "styled-components";
 export default GuessAttemptDiv;
 
 function GuessAttemptDiv(props) {
@@ -10,13 +11,13 @@ function GuessAttemptDiv(props) {
   } = props;
 
   if (gameWon) {
-    return <p className="endGameMsg greenFont">PARABENS!! VOCE ACERTOU!</p>;
+    return <EndGameMsgWIN>PARABENS!! VOCE ACERTOU!</EndGameMsgWIN>;
   } else if (gameLost) {
-    return <p className="endGameMsg redFont">VOCE ERROU!! TENTE NOVAMENTE!</p>;
+    return <EndGameMsgLoss>VOCE ERROU!! TENTE NOVAMENTE!</EndGameMsgLoss>;
   } else {
     return (
-      <div className="guess-attempt-div">
-        <input
+      <GuessAttemptDivStyled>
+        <InputStyled
           autoFocus
           value={guessAttemptInputValue}
           name="guess-attempt"
@@ -27,9 +28,40 @@ function GuessAttemptDiv(props) {
               submitGuessAttempt();
             }
           }}
-        ></input>
-        <ion-icon class="send-ionicon" name="send" onClick={submitGuessAttempt}></ion-icon>
-      </div>
+        ></InputStyled>
+        <ion-icon
+          class="send-ionicon"
+          name="send"
+          onClick={submitGuessAttempt}
+        ></ion-icon>
+      </GuessAttemptDivStyled>
     );
   }
 }
+
+// Styled Components
+
+const EndGameMsgWIN = styled.p`
+  font-weight: bold;
+  color: green;
+`;
+
+const EndGameMsgLoss = styled.p`
+  font-weight: bold;
+  color: red;
+`;
+
+const GuessAttemptDivStyled = styled.div`
+  display: flex;
+
+  align-items: center;
+`;
+
+const InputStyled = styled.input`
+  border-radius: 6px;
+  width: 250px;
+  height: 40px;
+
+  margin-right: 10px;
+`;
+
