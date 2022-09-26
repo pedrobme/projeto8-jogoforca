@@ -40,6 +40,11 @@
     pointer-events: none;
 }
 
+.disabled-hint{
+    background-color: rgb(73, 73, 73);
+    pointer-events: none;
+}
+
 .disabled-div{
     filter:brightness(20%);
 

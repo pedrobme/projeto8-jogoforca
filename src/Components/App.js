@@ -240,7 +240,7 @@ function App() {
 
     if (hintAvaibled === false) {
       return (
-        <div onClick={getHint} className="hint disabled-div">
+        <div onClick={getHint} className="hint disabled-hint">
           <ion-icon class="hint-ionicon" name="bulb-outline"></ion-icon>
           <br></br>
           <p>DICA</p>
