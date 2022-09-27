@@ -17,9 +17,9 @@ function GameAndInput(props) {
 
   return (
     <MainContentDiv>
-      <ImgStyled src={wrongGuessesImages[numberOfWrongGuesses]} />
+      <ImgStyled data-identifier="game-image" src={wrongGuessesImages[numberOfWrongGuesses]} />
       <SidebarDiv>
-        <ButtonStyled onClick={startGame}>Nova Palavra</ButtonStyled>
+        <ButtonStyled data-identifier="choose-word" onClick={startGame}>Nova Palavra</ButtonStyled>
         <GuessAttemptDiv
           gameWon={gameWon}
           gameLost={gameLost}

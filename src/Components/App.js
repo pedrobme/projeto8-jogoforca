@@ -294,7 +294,7 @@ function App() {
         startGame={startGame}
       />
       <GuessAndHintDiv>
-        <GuessUl>
+        <GuessUl data-identifier="word">
           <ShowGuess />
         </GuessUl>
         <HintHandler />

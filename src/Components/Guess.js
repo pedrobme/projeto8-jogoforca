@@ -18,6 +18,7 @@ function GuessAttemptDiv(props) {
     return (
       <GuessAttemptDivStyled>
         <InputStyled
+          data-identifier="type-guess"
           autoFocus
           value={guessAttemptInputValue}
           name="guess-attempt"
@@ -30,6 +31,7 @@ function GuessAttemptDiv(props) {
           }}
         ></InputStyled>
         <ion-icon
+          data-identifier="guess-button"
           class="send-ionicon"
           name="send"
           onClick={submitGuessAttempt}
@@ -64,4 +66,3 @@ const InputStyled = styled.input`
 
   margin-right: 10px;
 `;
-

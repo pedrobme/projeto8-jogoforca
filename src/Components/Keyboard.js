@@ -8,7 +8,7 @@ function Keyboard(props) {
     <KeyboardUl>
       {lettersObjectList.map((item, index) =>
         item.clickable ? (
-          <LetterLi key={index}onClick={() => guessingTurn(item)}>
+          <LetterLi data-identifier="letter" key={index}onClick={() => guessingTurn(item)}>
             {item.letter}
           </LetterLi>
         ) : (

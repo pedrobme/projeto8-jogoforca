@@ -7,7 +7,7 @@ function InitialScreen(props) {
   return (
     <>
       <GameTittle>HANGMAN GAME</GameTittle>
-      <NewGameDiv onClick={() => props.firstStartGame()}>
+      <NewGameDiv data-identifier="choose-word" onClick={() => props.firstStartGame()}>
         {[
           <u key="n">N</u>,
           <u key="e1">E</u>,
