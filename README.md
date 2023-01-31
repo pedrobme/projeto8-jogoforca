@@ -1,6 +1,3 @@
-# projeto8-jogoforca
+# React hangman game
 
-
-Deploy avaible in:
-
-https://projeto8-jogoforca-rr8y.vercel.app/
+Hangman React context api
